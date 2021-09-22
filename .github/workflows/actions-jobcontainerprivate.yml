@@ -1,0 +1,20 @@
+name: JobContainers Private reg
+
+on: [workflow_dispatch]
+
+jobs:
+  private:
+    runs-on: ubuntu-latest
+    services:
+      redis: 
+        image: ghcr.io/n3wt0n/modified-redis
+        credentials:
+          username: n3wt0n
+          password: ${{ secrets.GHCR_TOKEN }}
+    container:
+      image: ghcr.io/n3wt0n/modified-alpine
+      credentials:
+        username: n3wt0n
+        password: ${{ secrets.GHCR_TOKEN }}
+    steps:
+    - run: echo secret!

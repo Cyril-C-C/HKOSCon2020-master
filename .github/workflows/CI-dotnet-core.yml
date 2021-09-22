@@ -1,0 +1,38 @@
+name: CI - .NET Core
+
+on:
+  push:
+    branches: [ master ]
+    paths: 
+    - 'NetCoreWebApp/**'
+  pull_request:
+    branches: [ master ]
+    paths: 
+    - 'NetCoreWebApp/**'
+
+env:
+  folderName: 'NetCoreWebApp'
+
+jobs:
+  build:
+    env:
+      csprojName: 'NetCoreWebApp.csproj'
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+            
+    - name: Install dependencies
+      run: dotnet restore $folderName/$csprojName
+      
+    - name: Build
+      run: dotnet build ${{ format('{0}/{1}', '$folderName', '$csprojName') }} --configuration Release --no-restore
+      
+    - name: Test
+      run: dotnet test ${{ format('{0}/{1}', '$folderName', '$csprojName') }} --no-restore --verbosity normal
